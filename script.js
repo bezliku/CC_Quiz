@@ -20,3 +20,15 @@ var allQuestions = [
 
 ];
 
+var questionArea = $("#question");
+var questionContent = $("#question > h2");
+var pytania = $("#pytania");
+var nextButton = $("#next");
+
+var currentQuestion = allQuestions[0].question;
+questionContent.html(currentQuestion);
+
+var allChoices = allQuestions[0].choices;
+for (var i in allChoices) {
+	pytania.append("<input type='radio'>" + allChoices[i] + "<br/>");
+}
