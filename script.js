@@ -60,6 +60,10 @@ nextButton.click(function(){
   }
   questionNumber +=1;
 
+  if(questionNumber == allQuestions.length) {
+    alert("koniec!");
+  }
+
   pytania.empty();
   loadQuestion();
 
