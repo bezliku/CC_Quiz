@@ -20,15 +20,36 @@ var allQuestions = [
 
 ];
 
-var questionArea = $("#question");
-var questionContent = $("#question > h2");
-var pytania = $("#pytania");
-var nextButton = $("#next");
+var questionArea = $("#question"),
+    questionContent = $("#question > h2"),
+    pytania = $("#pytania"),
+    nextButton = $("#next"),
+    questionNumber = 0,
+    userAnswer,
+    score = 0;
 
-var currentQuestion = allQuestions[0].question;
+var currentQuestion = allQuestions[questionNumber].question;
 questionContent.html(currentQuestion);
 
-var allChoices = allQuestions[0].choices;
+var allChoices = allQuestions[questionNumber].choices;
 for (var i in allChoices) {
-	pytania.append("<input type='radio'>" + allChoices[i] + "<br/>");
+	pytania.append("<input type='radio' name='answer' value='" + i + "'>" + allChoices[i] + "<br/>");
 }
+
+var correctAnswer = allQuestions[questionNumber].correctAnswer;
+  
+var checkAnswer = function(){
+      if (userAnswer == correctAnswer) {
+        return true;
+    }
+ };
+
+nextButton.click(function(){
+
+  userAnswer = $("input[name=answer]:checked").val();
+  if (checkAnswer() == true) {
+    score +=1;
+  }
+
+
+});
