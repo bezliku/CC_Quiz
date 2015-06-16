@@ -23,6 +23,7 @@ var questionArea = $("#question"),
     currentChoices = $("#choices"),
     nextButton = $("#next"),
     submitButton,
+    prevButton = $("#prev"),
     questionNumber = 0,
     currentQuestion,
     allChoices,
@@ -45,6 +46,8 @@ var loadQuestion = function() {
 
 loadQuestion();
 
+var allUserAnswers = [];
+
 var checkAnswer = function(){
       if (userAnswer == correctAnswer) {
         return true;
@@ -52,13 +55,27 @@ var checkAnswer = function(){
   };
 
 
-nextButton.click(function(){
+var checkPreviousAnswer = function(){
+    $('input[name=answer]').each(function(){
+       if ( $(this).attr("value") == allUserAnswers[questionNumber] ) {
+           this.setAttribute("checked", "checked");
+        }
+    });
+};
 
+nextButton.click(function(){
   userAnswer = $("input[name=answer]:checked").val();
-  if (checkAnswer() == true) {
+  allUserAnswers[questionNumber] = userAnswer;
+  if(userAnswer){
+    if(questionNumber == 0 ) {
+      prevButton.show();
+    }
+
+    if (checkAnswer() == true) {
     score +=1;
-  }
-  questionNumber +=1;
+    } 
+
+    questionNumber +=1;
 
   if (questionNumber >= allQuestions.length) {
     $("#question").empty();
@@ -76,10 +93,19 @@ nextButton.click(function(){
     return 0;
   }
 
-  currentChoices.empty();
-  loadQuestion();
-
+    currentChoices.empty();
+    loadQuestion();
+    checkPreviousAnswer();
+  }
 });
 
+prevButton.click(function(){
+  if(questionNumber>0) {
+    questionNumber -=1;
+    currentChoices.empty();
+    loadQuestion();
+    checkPreviousAnswer();
+   }
+});
 
 
