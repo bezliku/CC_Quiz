@@ -24,6 +24,7 @@ var questionArea = $("#question"),
     questionContent = $("#question > h2"),
     pytania = $("#pytania"),
     nextButton = $("#next"),
+    prevButton = $("#prev"),
     questionNumber = 0,
     currentQuestion,
     allChoices,
@@ -46,6 +47,8 @@ var loadQuestion = function() {
 
 loadQuestion();
 
+var allUserAnswers = [];
+
 var checkAnswer = function(){
       if (userAnswer == correctAnswer) {
         return true;
@@ -53,22 +56,36 @@ var checkAnswer = function(){
  };
 
 nextButton.click(function(){
-
   userAnswer = $("input[name=answer]:checked").val();
-  if (checkAnswer() == true) {
-    score +=1;
+  allUserAnswers[questionNumber] = userAnswer;
+  if(userAnswer){
+    if(questionNumber == 0 ) {
+      prevButton.show();
+    }
+     if (checkAnswer() == true) {
+      score +=1;
+    } 
+    questionNumber +=1;
+    if(questionNumber == allQuestions.length) {
+      alert("koniec!");
+    }
+    pytania.empty();
+    loadQuestion();
   }
-  questionNumber +=1;
-
-  if(questionNumber == allQuestions.length) {
-    alert("koniec!");
-  }
-
-  pytania.empty();
-  loadQuestion();
-
 });
 
+prevButton.click(function(){
+  if(questionNumber>0) {
+    questionNumber -=1;
+    pytania.empty();
+    loadQuestion();
+    $('input[name=answer]').each(function(){
+       if ( $(this).attr("value") == allUserAnswers[questionNumber] ) {
+           this.setAttribute("checked", "checked");
+        }
+    });
+   }
+});
 
 /*
 1. po ostatnim pytaniu zamienić Next na Submit - po kliknięciu wyświetl wynik
