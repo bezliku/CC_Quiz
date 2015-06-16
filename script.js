@@ -55,6 +55,14 @@ var checkAnswer = function(){
     }
  };
 
+var checkPreviousAnswer = function(){
+    $('input[name=answer]').each(function(){
+       if ( $(this).attr("value") == allUserAnswers[questionNumber] ) {
+           this.setAttribute("checked", "checked");
+        }
+    });
+};
+
 nextButton.click(function(){
   userAnswer = $("input[name=answer]:checked").val();
   allUserAnswers[questionNumber] = userAnswer;
@@ -62,7 +70,8 @@ nextButton.click(function(){
     if(questionNumber == 0 ) {
       prevButton.show();
     }
-     if (checkAnswer() == true) {
+
+    if (checkAnswer() == true) {
       score +=1;
     } 
     questionNumber +=1;
@@ -71,6 +80,8 @@ nextButton.click(function(){
     }
     pytania.empty();
     loadQuestion();
+    checkPreviousAnswer();
+
   }
 });
 
@@ -79,11 +90,7 @@ prevButton.click(function(){
     questionNumber -=1;
     pytania.empty();
     loadQuestion();
-    $('input[name=answer]').each(function(){
-       if ( $(this).attr("value") == allUserAnswers[questionNumber] ) {
-           this.setAttribute("checked", "checked");
-        }
-    });
+    checkPreviousAnswer();
    }
 });
 
