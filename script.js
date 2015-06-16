@@ -64,6 +64,8 @@ nextButton.click(function(){
     $("#question").empty();
     $("#question").append("<input id='submit' type='button' value='Submit'></input>");
     submitButton = $("#submit");
+    console.log(submitButton);
+    addList(submitButton);
     return 0;
   }
 
@@ -71,14 +73,14 @@ nextButton.click(function(){
   loadQuestion();
 
 });
+var addList = function(button){
+  $(button).click(function (){
 
+    $("#question").empty();
+    $("#question").append("<h2>Score: " + score + "</h2>"); 
+    console.log(score);
+    console.log("Submituje"); 
 
-$("#submit").click(function () {
-
-  $("#question").empty();
-  $("#question").append("<h2>Score: " + score + "</h2>"); 
-  console.log(score);
-  console.log("Submituje"); 
-
-});
+  });
+};
 
