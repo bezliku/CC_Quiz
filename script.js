@@ -22,7 +22,7 @@ var questionArea = $("#question"),
     questionContent = $("#question > h2"),
     currentChoices = $("#choices"),
     nextButton = $("#next"),
-    submitButton = null,
+    submitButton,
     questionNumber = 0,
     currentQuestion,
     allChoices,
@@ -63,7 +63,16 @@ nextButton.click(function(){
   if (questionNumber >= allQuestions.length) {
     $("#question").empty();
     $("#question").append("<input id='submit' type='button' value='Submit'></input>");
+    
     submitButton = $("#submit");
+
+      $(submitButton).click(function () {
+        $("#question").empty();
+        $("#question").append("<h2>Score: " + score + "</h2>"); 
+        console.log(score);
+        console.log("Submituje"); 
+      });
+
     return 0;
   }
 
@@ -73,12 +82,4 @@ nextButton.click(function(){
 });
 
 
-$("#submit").click(function () {
-
-  $("#question").empty();
-  $("#question").append("<h2>Score: " + score + "</h2>"); 
-  console.log(score);
-  console.log("Submituje"); 
-
-});
 
