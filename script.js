@@ -77,11 +77,11 @@ nextButton.click(function(){
 
     questionNumber +=1;
 
-  if (questionNumber >= allQuestions.length) {
-    $("#question").empty();
-    $("#question").append("<input id='submit' type='button' value='Submit'></input>");
-    
-    submitButton = $("#submit");
+    if (questionNumber >= allQuestions.length) {
+      $("#question").empty();
+      $("#question").append("<input id='submit' type='button' value='Submit'></input>");
+      
+      submitButton = $("#submit");
 
       $(submitButton).click(function () {
         $("#question").empty();
@@ -90,8 +90,8 @@ nextButton.click(function(){
         console.log("Submituje"); 
       });
 
-    return 0;
-  }
+      return 0;
+    }
 
     currentChoices.empty();
     loadQuestion();
@@ -100,11 +100,15 @@ nextButton.click(function(){
 });
 
 prevButton.click(function(){
+allUserAnswers[questionNumber] = userAnswer;
   if(questionNumber>0) {
     questionNumber -=1;
     currentChoices.empty();
     loadQuestion();
     checkPreviousAnswer();
+   }
+   if (questionNumber == 0) {
+    prevButton.hide();
    }
 });
 
