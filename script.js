@@ -1,115 +1,113 @@
-var allQuestions = [
+$.getJSON("/questions.json", function( data ) {
+  console.log(data);
+  var allQuestions = data;
 
-{
-  question: "Who is Prime Minister of the United Kingdom?", 
-  choices: ["David Cameron", "Gordon Brown", "Winston Churchill", "Tony Blair"], 
-  correctAnswer:0
-},
-{
-  question: "Jakiego koloru jest pies?", 
-  choices: ["różowy", "brązowy", "niebieski w kropki", "przezroczysty"], 
-  correctAnswer:1
-},
-{
-  question: "Ile jest gruszek na wierzbie?", 
-  choices: ["100", "3", "1", "0"], 
-  correctAnswer:3
-}
+  var questionArea = $("#question"),
+      questionContent = $("#question > h2"),
+      currentChoices = $("#choices"),
+      nextButton = $("#next"),
+      submitButton,
+      prevButton = $("#prev"),
+      questionNumber = 0,
+      currentQuestion,
+      allChoices,
+      correctAnswer,
+      userAnswer,
+      score = 0,
+      progressbar = $("#progressbar");
 
-];
+  var loadQuestion = function() {
 
-var questionArea = $("#question"),
-    questionContent = $("#question > h2"),
-    currentChoices = $("#choices"),
-    nextButton = $("#next"),
-    submitButton,
-    prevButton = $("#prev"),
-    questionNumber = 0,
-    currentQuestion,
-    allChoices,
-    correctAnswer,
-    userAnswer,
-    score = 0;
+  	currentQuestion = allQuestions[questionNumber].question;
+  	questionContent.html(currentQuestion);
 
-var loadQuestion = function() {
+  	allChoices = allQuestions[questionNumber].choices;
+  	for (var i in allChoices) {
+  		currentChoices.append("<input type='radio' name='answer' value='" + i + "'>" + allChoices[i] + "<br/>");
+  	}
 
-	currentQuestion = allQuestions[questionNumber].question;
-	questionContent.html(currentQuestion);
+  	correctAnswer = allQuestions[questionNumber].correctAnswer;
 
-	allChoices = allQuestions[questionNumber].choices;
-	for (var i in allChoices) {
-		currentChoices.append("<input type='radio' name='answer' value='" + i + "'>" + allChoices[i] + "<br/>");
-	}
+    progressbar.progressbar({
+      max: allQuestions.length,
+      value: questionNumber
+      
+    });
+  }
 
-	correctAnswer = allQuestions[questionNumber].correctAnswer;
-}
+  loadQuestion();
 
-loadQuestion();
+  var allUserAnswers = [];
 
-var allUserAnswers = [];
+  var checkAnswer = function(){
+        if (userAnswer == correctAnswer) {
+          return true;
+      }
+    };
 
-var checkAnswer = function(){
-      if (userAnswer == correctAnswer) {
-        return true;
-    }
+
+  var checkPreviousAnswer = function(){
+      $('input[name=answer]').each(function(){
+         if ( $(this).attr("value") == allUserAnswers[questionNumber] ) {
+             this.setAttribute("checked", "checked");
+          }
+      });
   };
 
+  nextButton.click(function(){
+    userAnswer = $("input[name=answer]:checked").val();
+    allUserAnswers[questionNumber] = userAnswer;
+    if(userAnswer){
+      if(questionNumber == 0 ) {
+        prevButton.show();
+      }
 
-var checkPreviousAnswer = function(){
-    $('input[name=answer]').each(function(){
-       if ( $(this).attr("value") == allUserAnswers[questionNumber] ) {
-           this.setAttribute("checked", "checked");
-        }
-    });
-};
+      if (checkAnswer() == true) {
+      score +=1;
+      } 
 
-nextButton.click(function(){
-  userAnswer = $("input[name=answer]:checked").val();
-  allUserAnswers[questionNumber] = userAnswer;
-  if(userAnswer){
-    if(questionNumber == 0 ) {
-      prevButton.show();
-    }
+      questionNumber +=1;
 
-    if (checkAnswer() == true) {
-    score +=1;
-    } 
-
-    questionNumber +=1;
-
-    if (questionNumber >= allQuestions.length) {
-      $("#question").empty();
-      $("#question").append("<input id='submit' type='button' value='Submit'></input>");
-      
-      submitButton = $("#submit");
-
-      $(submitButton).click(function () {
+      if (questionNumber >= allQuestions.length) {
         $("#question").empty();
-        $("#question").append("<h2>Score: " + score + "</h2>"); 
-        console.log(score);
-        console.log("Submituje"); 
-      });
+        $("#question").append("<input id='submit' type='button' value='Submit'></input>");
+        
+        submitButton = $("#submit");
 
-      return 0;
+        $(submitButton).click(function () {
+          $("#question").empty();
+          $("#question").append("<h2>Score: " + score + "</h2>"); 
+          console.log(score);
+          console.log("Submituje"); 
+          progressbar.progressbar( "destroy" );
+        });
+
+        progressbar.progressbar({
+          max: allQuestions.length,
+          value: allQuestions.length
+        });
+        return 0;
+      }
+
+      currentChoices.empty();
+      loadQuestion();
+      checkPreviousAnswer();
     }
+  });
 
-    currentChoices.empty();
-    loadQuestion();
-    checkPreviousAnswer();
-  }
-});
+  prevButton.click(function(){
+  allUserAnswers[questionNumber] = userAnswer;
+    if(questionNumber>0) {
+      questionNumber -=1;
+      currentChoices.empty();
+      loadQuestion();
+      checkPreviousAnswer();
+     }
+     if (questionNumber == 0) {
+      prevButton.hide();
+     }
+  });
 
-prevButton.click(function(){
-allUserAnswers[questionNumber] = userAnswer;
-  if(questionNumber>0) {
-    questionNumber -=1;
-    currentChoices.empty();
-    loadQuestion();
-    checkPreviousAnswer();
-   }
-   if (questionNumber == 0) {
-    prevButton.hide();
-   }
 });
 
 
